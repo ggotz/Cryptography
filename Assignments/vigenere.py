@@ -1,0 +1,144 @@
+import re
+import math
+
+def freq(str):
+    freq = {}
+    for i in "QWERTYUIOPASDFGHJKLZXCVBNM":
+        freq[i] = 0
+    for c in str:
+        if ord(c) < ord('A') or ord(c) > ord('Z'):
+            continue
+        freq[c] += 1
+    return freq
+
+
+text ="""
+ZL CXCEB IHRDF YR VYC QKWQR YJ C ICKHZXASSP ZL RKMSAYKTRNWR. HKL NIXVJDIAHUD SH
+TFTTD GPQMVRJ WTFGDKVG YYH YFHLN MV WPDF HKL NIUZEC EWPPDEVZMCL CI TOGJRLXVOO
+JYQRLRXGU DUN FTFSVAH WOO GQJR DY VLNR KTRBT VFBWDSIIYEAWF KOZKTCH WCZU
+DS YYCGX HKLI GCE ZT NGHK SR ULAW VCPTOVEZYA TDSSSGCKGDGG DZ BIOFRT VOVO
+NMUGCCLSUZ KRF TMBIIWLB XGIKXGOOZ. SR VLPC, LIFO KTRCGRTHLVXW EICPMS D UOIF
+WMG GSZ AITGJ MU VFBWDSIIYEAWF ZIWVVKH PVLJR QKEGBBNH ARI PVATLGLAI SH JCRNFH
+ROC FZQIKWEBDMQE AWTBQLVW CEB HNDSSI XJV CFNWYHVIPK MU T KUPDXGE QXZBDAEVG. RR
+IAS VHWI VZKT, MVHVBIVZAPE RHCOPQGKTGHV PX MPWMGFOWPYR VYCDKM DUN GQDNJMSU
+ZMMGEAT LVRD ZVQDGHX CI WBSXZBXGU SYYZCSJN LSFBBI EIWEMCVFCXGDQ, RAOQNSRI
+KFXL OQJSIPK YGM WQAY E UTGTGQH. ARI FVTTECSTORV FD RHASBDIT TMCMFRSVIF
+TMBFIQPMEVZMC GSWDYVMJ NGHALZOW GWDDKHOLCW CEB XGSAWORUZTT VCQAKGV SCIPSHU
+ZIQGJT HF FVWTWKCGL CQ VZTQJGIX GLKOW QW RWX KRYVH, TVNATQLUQ QQJR BTWO
+HXH ORLN XLFBBWKFLH PWWO DINVADFAXUSGCKGDGG. IVB QCEW PIDOPMEVZMCL HKLCI
+EFLITQWZ WYUK ZT FOGL CIELPT TUDPXWV SMIA SDCOWFIMEIWQN KRF KFT BBMLMXKFL DY
+WOSOKKKGBTHH TOWURETL. OW WBIUVLI, ACZLFIT, KFT LCOBDMQE MU LSFBBMVP NGHPOLWW
+NREH PSOS LIJZLS HHKLB ETVYH HT FVWQWEGRTHLVXW VVAWGCOVQC. EFLIXASVBETP
+AGRDWVQVCGFN BG XUKFNV RD FSHA DLG ICFNWULWIPKQ, XG HKHD MVJ SHX KRBVH
+KDNDLS VBML UVTTKS LUMSPMCCBSQJOW QE RWX GBZDIO LQTKG, DZ DS GCGBBBDAO QCEW
+DY HKL LIPVDXMG RM DINVNGHQHZCMPX. RWX PHZD OPFUC VFBWDSIIYEAWF WBSDCCB BG
+WOKX QW NGBJDJI: TTVTTGHLUQ XJV SCTIWOYVKQCS XLWYKGVZMC HT LUPSTDYIBCQ MBSO
+TMBFIQPMEVZMCL CYLB EP ZLHXQXYO GJRLCXZ. LU YVFVP IH IVL MVAGRDZFDWRC VF CCLIUL
+ZVKMYRR, VRDOZGI, GI BG FBBVGERAR BHJOWURPN YCU ARI EFKBNBLJKXKEE ETFWPOW VF
+QWTFH H UIA NFXVV LZ URQNL IH BR VXI GCQT. MVLZ SW FFLT UM VLXHKEE IAS NLI MP
+RBKTBFL YZGI QDFS VLMYTV AWTBQLV WWTF PL DUPFEVV ADNFLLB ST ICVBGWLBIF DYXE.
+O SYSZCKC RHBYLBWCKGDG PHAGIGE RLH DHVZPG NGIA BR WBMQI YRJIDPXXCEAT BG D
+JYQOFL DVQXYBIPTC XG PXZSRGJQ, WHKHCOV, CEB XM WV BXVGRJXLHLJ DS GONTVH LUSXKRJ
+QNGLUOWU TMCMOFAC XQ SC EHGWWYRGU JDGU HUYYIY DDK YHFC XQ SC IKOQZWMVKCS
+UM VVWI RYWHBQDS WICEQ. IAS FVCX CEB SXZDF SQRFQTW PB ARMU BCN WWVABMDLRXHB
+SYYFNVK XL O PHTST SYGKWHY DS VYC IKOQZPIT FD QNGLUOWU TMBFIQPMEVZMCL HR SKVIV
+RTESSYYGGJQXGU QLDAQIIH.
+"""
+
+letters = re.sub('[^a-zA-Z]', '', text)
+
+
+vig_len = 0
+ic = 0
+
+for r in range(1, 101):
+    for i in range(r):
+        col = letters[i::r]
+        fr = freq(col)
+        ic = 0
+        for c in "QWERTYUIOPASDFGHJKLZXCVBNM":
+            ic += fr[c] * (fr[c] - 1)
+        ic /=  len(col) * (len(col) - 1)
+ 
+        if ic < 0.05:
+            break
+    if ic >= 0.05:
+        vig_len = r
+        break
+
+eng_freq = {
+    'E' : 0.111607,
+    'A' : 0.084966,
+    'R' : 0.075809,
+    'I' : 0.075448,
+    'O' : 0.071635,
+    'T' : 0.069509,
+    'N' : 0.066544,
+    'S' : 0.057531,
+    'L' : 0.054893,
+    'C' : 0.045338,
+    'U' : 0.036308,
+    'D' : 0.033844,
+    'P' : 0.031671,
+    'M' : 0.030129,
+    'H'	: 0.030034,
+    'G'	: 0.024705,
+    'B' : 0.020720,
+    'F'	: 0.018121,
+    'Y'	: 0.017779,
+    'W'	: 0.012899,
+    'K'	: 0.011016,	
+    'V'	: 0.010074,
+    'X'	: 0.002902,	
+    'Z'	: 0.002722,
+    'J'	: 0.001965,	
+    'Q'	: 0.001962
+}
+
+
+key = []
+for i in range(r):
+    col = letters[i::r]
+    
+    fr = freq(col)
+    h = []
+    for j in range(26):
+        entr = 0
+        for k in range(26):
+            entr -= fr[chr(k + ord('A'))] * eng_freq[chr((j+k)%26 +ord('A') )]
+        h.append(entr)
+    min = 0
+    c = 0
+    for i, ent in enumerate(h):
+        if ent < min:
+            min = ent
+            c = i
+    key.append(c)
+    print(chr(ord('A') + c), end="")
+
+print()
+
+decrypted = ""
+k = 0
+for t in text:
+    if ord(t) < ord('A') or ord(t) > ord('Z'):
+        
+        decrypted += t
+        continue
+    c = ord(t) + key[k%r]
+    if c > ord('Z'):
+        c -= 26
+    
+    decrypted += chr(c)
+    k +=1
+
+print(decrypted)
+fr = freq(decrypted)
+ic = 0
+n = 0
+for c in "QWERTYUIOPASDFGHJKLZXCVBNM":
+    ic += fr[c] * (fr[c] - 1)
+    n += fr[c]
+ic /=  n * (n - 1)
+
+print(ic)
